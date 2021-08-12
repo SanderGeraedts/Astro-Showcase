@@ -1,6 +1,7 @@
 ---
 // Component Imports
 import Tour from '../components/Tour.astro';
+import Layout from '../layouts/layout.astro';
 // You can import components from any supported Framework here!
 
 
@@ -12,45 +13,15 @@ let title = 'My Astro Site';
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
+const response = await fetch('https://api.github.com/search/repositories?q=language:Astro');
+const data = await response.json();
+
+const projects = data.items.filter((project) => (project.homepage && !project.homepage.includes('localhost')));
 ---
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <title>{title}</title>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="stylesheet" href="/style/global.css">
-    <link rel="stylesheet" href="/style/home.css">
 
-    <style>
-        header {
-            display: flex;
-            flex-direction: column;
-            gap: 1em;
-            max-width: min(100%, 68ch);
-        }
-    </style>
-</head>
-<body>
-    <main>
-        <header>
-            <div>
-                <img width="60" height="80" src="/assets/logo.svg" alt="Astro logo">
-                <h1>Welcome to <a href="https://astro.build/">Astro</a></h1>
-            </div>
-        </header>
-
-        <Tour />
-
-        <!--
-           - You can also use imported framework components directly in your markup!
-           -
-           - Note: by default, these components are NOT interactive on the client.
-           - The `:visible` directive tells Astro to make it interactive.
-           -
-           - See https://docs.astro.build/core-concepts/component-hydration/ 
-           -->
-
-    </main>
-</body>
-</html>
+<Layout>
+<ul class="mx-2">
+<li><a href="https://sanderg.nl">sanderg.nl</a></li>
+{projects.map(project => <li><a href={(project.homepage.includes("http")) ? project.homepage : `https://${project.homepage}`}>{project.name}</a></li>)}
+</ul>
+</Layout>
