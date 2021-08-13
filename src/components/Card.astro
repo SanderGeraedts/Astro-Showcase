@@ -1,0 +1,34 @@
+---
+import * as cheerio from 'cheerio';
+
+export interface Props {
+  project: object;
+}
+
+const { project } = Astro.props;
+
+const homepage = (project.homepage.startsWith('http')) ? project.homepage : `https://${project.homepage}`;
+
+const data = await fetch(homepage);
+const html = await data.text()
+const $ = cheerio.load(html);
+const imageUrl = $('meta[property="og:image"]').attr('content') || $('meta[property="og:image:url"]').attr('content');
+
+let image;
+
+if(imageUrl) {
+    console.log(imageUrl);
+    image = (imageUrl.startsWith('http')) ? imageUrl : homepage + imageUrl
+} else {
+    image = "/assets/placeholder.png";
+}
+---
+<article class="bg-white shadow rounded-xl truncate max-w-md">
+    <img 
+        src={image} 
+        onerror="this.onerror=null;this.src='/assets/placeholder.png';" 
+        alt={`Picture of ${project.owner.login}'s ${project.name}`}>
+    <img class="rounded-full m-2" height="64px" width="64px" src={project.owner.avatar_url} alt={`Picture of ${project.owner.login}`} loading="lazy">
+    <h2 class="font-bold m-2 text-xl"><a href={homepage}>{ project.full_name }</a></h2>
+    <p class="px-2 pb-2 ">{project.description}</p>
+</article>

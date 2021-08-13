@@ -1,6 +1,6 @@
 ---
 // Component Imports
-import Tour from '../components/Tour.astro';
+import Card from '../components/Card.astro';
 import Layout from '../layouts/layout.astro';
 // You can import components from any supported Framework here!
 
@@ -13,15 +13,14 @@ let title = 'My Astro Site';
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
-const response = await fetch('https://api.github.com/search/repositories?q=language:Astro');
+const response = await fetch('https://api.github.com/search/repositories?q=language:Astro&per_page=100');
 const data = await response.json();
 
 const projects = data.items.filter((project) => (project.homepage && !project.homepage.includes('localhost')));
 ---
 
 <Layout>
-<ul class="mx-2">
-<li><a href="https://sanderg.nl">sanderg.nl</a></li>
-{projects.map(project => <li><a href={(project.homepage.includes("http")) ? project.homepage : `https://${project.homepage}`}>{project.name}</a></li>)}
-</ul>
+<div class="flex flex-wrap gap-2 justify-center">
+{projects.map(project => <Card project={project} />)}
+</div>
 </Layout>
