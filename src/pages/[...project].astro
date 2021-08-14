@@ -1,0 +1,46 @@
+---
+import fs from 'node:fs'
+import { getOgImage, getUrl } from '../helpers';
+import Layout from '../layouts/layout';
+import Card from '../components/Card.astro';
+
+export async function getStaticPaths() {
+    let data;
+
+    if(fs.existsSync('./src/local.json')) {
+        const raw = fs.readFileSync('./src/local.json');
+        data = JSON.parse(raw); 
+    } else {
+        const response = await fetch('https://api.github.com/search/repositories?q=language:Astro&per_page=100')
+        data = await response.json();
+        fs.writeFileSync('./src/local.json', JSON.stringify(data));
+    }
+
+    const projects = data.items.filter((project) => (project.homepage && !project.homepage.includes('localhost')));
+
+    return projects.map((project) => {
+        return {
+            params: { project: project.full_name },
+            props: { data: project } };
+        }
+    );
+}
+const {project} = Astro.request.params;
+const {data} = Astro.props;
+
+const image = await getOgImage(data.homepage);
+---
+
+<Layout>
+    <article class="bg-white shadow overflow-hidden rounded-xl mx-auto max-w-2xl">
+        <img 
+            src={image} 
+            onerror="this.onerror=null;this.src='/assets/placeholder.png';" 
+            alt={`Picture of ${data.owner.login}'s ${data.name}`}>
+        <div class="flex items-center">
+            <img class="rounded-full m-2" height="64px" width="64px" src={data.owner.avatar_url} alt={`Picture of ${data.owner.login}`} loading="lazy">
+            <h2 class="font-bold my-2 text-xl"><a href={data.owner.url}>{data.owner.login}</a>/<a href={getUrl(data.homepage)}>{ data.name }</a></h2>
+        </div>
+        <p class="px-2 pb-2 ">{data.description}</p>
+    </article>
+</Layout>

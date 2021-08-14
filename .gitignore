@@ -1,6 +1,9 @@
 # build output
 dist
 
+# Caching file for build
+src/local.json
+
 # dependencies
 node_modules/
 .snowpack/

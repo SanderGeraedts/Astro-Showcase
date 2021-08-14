@@ -1,5 +1,5 @@
 ---
-import * as cheerio from 'cheerio';
+import { getOgImage } from '../helpers';
 
 export interface Props {
   project: object;
@@ -7,28 +7,18 @@ export interface Props {
 
 const { project } = Astro.props;
 
-const homepage = (project.homepage.startsWith('http')) ? project.homepage : `https://${project.homepage}`;
-
-const data = await fetch(homepage);
-const html = await data.text()
-const $ = cheerio.load(html);
-const imageUrl = $('meta[property="og:image"]').attr('content') || $('meta[property="og:image:url"]').attr('content');
-
-let image;
-
-if(imageUrl) {
-    console.log(imageUrl);
-    image = (imageUrl.startsWith('http')) ? imageUrl : homepage + imageUrl
-} else {
-    image = "/assets/placeholder.png";
-}
+image = await getOgImage(project.homepage);
 ---
-<article class="bg-white shadow rounded-xl truncate max-w-md">
-    <img 
-        src={image} 
-        onerror="this.onerror=null;this.src='/assets/placeholder.png';" 
-        alt={`Picture of ${project.owner.login}'s ${project.name}`}>
-    <img class="rounded-full m-2" height="64px" width="64px" src={project.owner.avatar_url} alt={`Picture of ${project.owner.login}`} loading="lazy">
-    <h2 class="font-bold m-2 text-xl"><a href={homepage}>{ project.full_name }</a></h2>
-    <p class="px-2 pb-2 ">{project.description}</p>
-</article>
+<a href={`/${project.full_name}`}>
+    <article class="bg-white shadow overflow-hidden rounded-xl max-w-md">
+        <img 
+            src={image} 
+            onerror="this.onerror=null;this.src='/assets/placeholder.png';" 
+            alt={`Picture of ${project.owner.login}'s ${project.name}`}>
+        <div class="flex items-center">
+            <img class="rounded-full m-2" height="64px" width="64px" src={project.owner.avatar_url} alt={`Picture of ${project.owner.login}`} loading="lazy">
+            <h2 class="font-bold my-2 text-xl">{ project.full_name }</h2>
+        </div>
+        <p class="px-2 pb-2 ">{project.description}</p>
+    </article>
+</a>
