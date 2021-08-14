@@ -1,5 +1,5 @@
 ---
-import { getOgImage } from '../helpers';
+import { getOgImage, getUrl } from '../helpers';
 
 export interface Props {
   project: object;
@@ -12,9 +12,13 @@ image = await getOgImage(project.homepage);
 <a href={`/${project.full_name}`}>
     <article class="bg-white shadow overflow-hidden rounded-xl max-w-md">
         <img 
+            class="min-h-235px"
             src={image} 
-            onerror="this.onerror=null;this.src='/assets/placeholder.png';" 
-            alt={`Picture of ${project.owner.login}'s ${project.name}`}>
+            onerror={`this.onerror=null; this.src='https://v1.screenshot.11ty.dev/${encodeURIComponent(
+      getUrl(project.homepage)
+    )}/opengraph'`}
+            alt={`Picture of ${project.owner.login}'s ${project.name}`}
+            loading="lazy">
         <div class="flex items-center">
             <img class="rounded-full m-2" height="64px" width="64px" src={project.owner.avatar_url} alt={`Picture of ${project.owner.login}`} loading="lazy">
             <h2 class="font-bold my-2 text-xl">{ project.full_name }</h2>
@@ -22,3 +26,9 @@ image = await getOgImage(project.homepage);
         <p class="px-2 pb-2 ">{project.description}</p>
     </article>
 </a>
+
+<style>
+.min-h-235px {
+    min-height: 235.19px;
+}
+</style>
