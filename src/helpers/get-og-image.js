@@ -1,4 +1,5 @@
 import * as cheerio from "cheerio";
+import fs from "node:fs";
 import getUrl from "./get-url.js";
 
 export default async (url) => {
@@ -14,8 +15,22 @@ export default async (url) => {
   if (imageUrl) {
     return imageUrl.startsWith("http") ? imageUrl : homepage + imageUrl;
   } else {
-    return `https://v1.screenshot.11ty.dev/${encodeURIComponent(
-      homepage
-    )}/opengraph`;
+    const response = await fetch(
+      `https://v1.screenshot.11ty.dev/${encodeURIComponent(homepage)}/opengraph`
+    );
+    const arrayBuffer = await response.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+
+    const filename = url.replace(/(^\w+:|^)\/\//, "").replaceAll("/", "");
+
+    const cache = "./public/.cache";
+
+    if (!fs.existsSync(cache)) {
+      fs.mkdirSync(cache, { recursive: true });
+    }
+
+    fs.createWriteStream(`./public/.cache/${filename}.png`).write(buffer);
+
+    return `/.cache/${filename}.png`;
   }
 };

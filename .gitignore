@@ -19,3 +19,5 @@ yarn-error.log*
 
 # macOS-specific files
 .DS_Store
+
+.cache
