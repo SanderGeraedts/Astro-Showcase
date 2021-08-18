@@ -13,6 +13,7 @@
   "dependencies": {
     "cheerio": "*",
     "cloudinary": "^1.26.3",
+    "dayjs": "^1.10.6",
     "dotenv": "^10.0.0"
   }
 }

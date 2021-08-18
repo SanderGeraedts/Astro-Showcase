@@ -6,7 +6,7 @@ import { getProjects } from '../helpers'
 const projects = await getProjects();
 ---
 
-<Layout>
+<Layout description="A page to showcase the latest Astro projects. For more info, go to Astro.build!">
 <div class="flex flex-wrap gap-2 justify-center">
 {projects.map(project => <Card project={project} />)}
 </div>

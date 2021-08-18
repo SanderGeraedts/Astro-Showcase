@@ -5,8 +5,8 @@
 html,
 body {
   font-size: 16px;
-  color: var(--col-black);
-  background-color: var(--col-off-white);
-  margin: 0;
-  padding: 0;
+}
+
+main {
+  min-height: calc(100% - 7.5rem);
 }

@@ -2,6 +2,9 @@
 import { getOgImage, getUrl, getProjects } from '../helpers';
 import Layout from '../layouts/layout';
 import Card from '../components/Card.astro';
+import dayjs from 'dayjs'
+import relativeTime  from 'dayjs/plugin/relativeTime'
+dayjs.extend(relativeTime);
 
 export async function getStaticPaths() {
     const projects = await getProjects();
@@ -20,7 +23,7 @@ const {data} = Astro.props;
 const image = await getOgImage(data.homepage, 'c_fit,h_353,w_672');
 ---
 
-<Layout>
+<Layout description={`A page to showcase ${data.owner.login}'s ${ data.name } repo. For more info, go to Astro.build!`}>
     <article class="bg-white shadow overflow-hidden rounded-xl mx-auto max-w-2xl">
         <img 
             src={image}
@@ -28,12 +31,31 @@ const image = await getOgImage(data.homepage, 'c_fit,h_353,w_672');
             height="353"
             onerror="this.onerror=null;this.src='/assets/placeholder.png';" 
             alt={`Picture of ${data.owner.login}'s ${data.name}`}>
-        <div class="flex items-center">
+        <div class="flex items-center ">
             <a href={data.owner.html_url}>
                 <img class="rounded-full m-2" height="64px" width="64px" src={data.owner.avatar_url} alt={`Picture of ${data.owner.login}`} loading="lazy">
             </a>
-            <h2 class="font-bold my-2 text-xl"><a href={getUrl(data.homepage)}>{data.owner.login}/{ data.name }</a></h2>
+            <div class="flex flex-col">
+            <h2 class="font-bold"><a href={getUrl(data.homepage)}>{data.owner.login}/{ data.name }</a></h2>
+            <p class=" text-gray-500 italic">Created {dayjs(data.created_at).fromNow()}, last updated {dayjs(data.updated_at).fromNow()}.</p>
+            </div>
+        </div>{
+            data.description &&
+            <div class="px-2 py-1">
+                <label for="description" class="font-bold">Description:</label>
+                <p id="description">{data.description}</p>
+            </div>
+        }
+        <div class="px-2 py-1">
+            <label for="homepage" class="font-bold">Page:</label>
+            <p id="homepage"><a class="underline" href={data.homepage}>{data.homepage}</a></p>
         </div>
-        <p class="px-2 pb-2 ">{data.description}</p>
+        <div class="px-2 py-1">
+            <label for="html_url" class="font-bold">Repository:</label>
+            <p id="html_url"><a class="underline" href={data.html_url}>{data.html_url}</a></p>
+        </div>
+        <div class="px-2 py-1 pb-2">
+            <a href="/">👈 Go back to overview</a>
+        </div>
     </article>
 </Layout>

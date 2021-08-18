@@ -101,7 +101,7 @@ export default async (url, cloudinaryOptions = "c_fit,h_235,w_448") => {
   } else {
     const filename = url.replace(/(^\w+:|^)\/\//, "").replaceAll("/", "");
     const image = await checkImage(filename);
-    const cloudinaryUrl = `https://res.cloudinary.com/sandergnl/image/upload/${cloudinaryOptions}/astro-showcase/${filename}.jpg`;
+    const cloudinaryUrl = `https://res.cloudinary.com/sandergnl/image/upload/${cloudinaryOptions},q_auto,f_auto/astro-showcase/${filename}.jpg`;
 
     // If the image does not exist, upload it.
     // If the image does exist, but is older than 1 day
