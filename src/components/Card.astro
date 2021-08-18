@@ -7,13 +7,13 @@ export interface Props {
 
 const { project } = Astro.props;
 
-image = await getOgImage(project.homepage);
+const image = await getOgImage(project.homepage);
 ---
 <a href={`/${project.full_name}`}>
     <article class="bg-white shadow overflow-hidden rounded-xl max-w-md">
         <img 
             class="min-h-235px"
-            src={image} 
+            src={ image} 
             onerror={`this.onerror=null; this.src='https://v1.screenshot.11ty.dev/${encodeURIComponent(
       getUrl(project.homepage)
     )}/opengraph'`}

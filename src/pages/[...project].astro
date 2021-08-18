@@ -1,34 +1,10 @@
 ---
-import fs from 'node:fs'
-import { getOgImage, getUrl } from '../helpers';
+import { getOgImage, getUrl, getProjects } from '../helpers';
 import Layout from '../layouts/layout';
 import Card from '../components/Card.astro';
 
 export async function getStaticPaths() {
-    let projects;
-
-    const cache = "./public/.cache";
-
-    if (!fs.existsSync(cache)) {
-      fs.mkdirSync(cache, { recursive: true });
-    }
-
-    // Check if "caching" file exists
-    if(fs.existsSync('./public/.cache/local.json')) {
-        // Read data from file
-        const raw = fs.readFileSync('./public/.cache/local.json');
-        projects = JSON.parse(raw); 
-    } else {
-        // Make API call and write to file
-        const response = await fetch('https://api.github.com/search/repositories?q=language:Astro&per_page=100')
-        const data = await response.json();
-
-        // Filter out null homepages and homepages linking to localhost
-        projects = data.items.filter((project) => (project.homepage && !project.homepage.includes('localhost') && !project.name.includes('-issue')));
-
-        // Write projects to "caching" file
-        fs.writeFileSync('./public/.cache/local.json', JSON.stringify(projects));
-    }
+    const projects = await getProjects();
 
 
     return projects.map((project) => {
@@ -41,20 +17,22 @@ export async function getStaticPaths() {
 const {project} = Astro.request.params;
 const {data} = Astro.props;
 
-const image = await getOgImage(data.homepage);
-
-console.log(image);
+const image = await getOgImage(data.homepage, 'c_fit,h_353,w_672');
 ---
 
 <Layout>
     <article class="bg-white shadow overflow-hidden rounded-xl mx-auto max-w-2xl">
         <img 
-            src={image} 
+            src={image}
+            width="672"
+            height="353"
             onerror="this.onerror=null;this.src='/assets/placeholder.png';" 
             alt={`Picture of ${data.owner.login}'s ${data.name}`}>
         <div class="flex items-center">
-            <img class="rounded-full m-2" height="64px" width="64px" src={data.owner.avatar_url} alt={`Picture of ${data.owner.login}`} loading="lazy">
-            <h2 class="font-bold my-2 text-xl"><a href={data.owner.html_url}>{data.owner.login}</a>/<a href={getUrl(data.homepage)}>{ data.name }</a></h2>
+            <a href={data.owner.html_url}>
+                <img class="rounded-full m-2" height="64px" width="64px" src={data.owner.avatar_url} alt={`Picture of ${data.owner.login}`} loading="lazy">
+            </a>
+            <h2 class="font-bold my-2 text-xl"><a href={getUrl(data.homepage)}>{data.owner.login}/{ data.name }</a></h2>
         </div>
         <p class="px-2 pb-2 ">{data.description}</p>
     </article>

@@ -11,6 +11,8 @@
     "tailwindcss": "^2.2.7"
   },
   "dependencies": {
-    "cheerio": "*"
+    "cheerio": "*",
+    "cloudinary": "^1.26.3",
+    "dotenv": "^10.0.0"
   }
 }
