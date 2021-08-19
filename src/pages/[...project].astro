@@ -9,7 +9,6 @@ dayjs.extend(relativeTime);
 export async function getStaticPaths() {
     const projects = await getProjects();
 
-
     return projects.map((project) => ({
             params: { project: project.full_name },
             props: { data: project } 

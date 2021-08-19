@@ -24,7 +24,7 @@ export default async () => {
       (project) =>
         project.homepage &&
         !project.homepage.includes("localhost") &&
-        !project.homepage.includes("github.com/snowpack/astro/issues") &&
+        !project.homepage.includes("github.com/snowpackjs/astro/issues") &&
         !project.name.includes("issue")
     );
 

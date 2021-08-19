@@ -1,5 +1,4 @@
 import * as cheerio from "cheerio";
-import fs from "node:fs";
 import getUrl from "./get-url.js";
 import * as cl from "cloudinary";
 import dotenv from "dotenv";
@@ -34,6 +33,13 @@ const getScreenshot = async (homepage) => {
   return Buffer.from(arrayBuffer);
 };
 
+/**
+ * Upload Image Buffer to Cloudinary
+ *
+ * @param {Buffer} screenshot
+ * @param {string} filename
+ * @returns Promise<Result>
+ */
 const uploadScreenshot = (screenshot, filename) => {
   return new Promise((resolve, reject) => {
     const uploadOptions = {
