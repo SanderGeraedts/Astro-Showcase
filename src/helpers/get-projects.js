@@ -24,8 +24,8 @@ export default async () => {
       (project) =>
         project.homepage &&
         !project.homepage.includes("localhost") &&
-        !project.name.includes("-issue") &&
-        !project.name.includes("repro")
+        !project.homepage.includes("github.com/snowpack/astro/issues") &&
+        !project.name.includes("issue")
     );
 
     // Write projects to "caching" file

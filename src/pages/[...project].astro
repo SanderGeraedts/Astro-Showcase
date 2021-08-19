@@ -10,11 +10,10 @@ export async function getStaticPaths() {
     const projects = await getProjects();
 
 
-    return projects.map((project) => {
-        return {
+    return projects.map((project) => ({
             params: { project: project.full_name },
-            props: { data: project } };
-        }
+            props: { data: project } 
+        })
     );
 }
 const {project} = Astro.request.params;
@@ -29,7 +28,9 @@ const image = await getOgImage(data.homepage, 'c_fit,h_353,w_672');
             src={image}
             width="672"
             height="353"
-            onerror="this.onerror=null;this.src='/assets/placeholder.png';" 
+            onerror={`this.src='https://v1.screenshot.11ty.dev/${encodeURIComponent(
+                getUrl(data.homepage)
+            )}/opengraph'`}
             alt={`Picture of ${data.owner.login}'s ${data.name}`}>
         <div class="flex items-center ">
             <a href={data.owner.html_url}>

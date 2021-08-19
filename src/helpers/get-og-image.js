@@ -89,12 +89,19 @@ const destroyImage = (filename) => {
 export default async (url, cloudinaryOptions = "c_fit,h_235,w_448") => {
   const homepage = getUrl(url);
 
-  const data = await fetch(homepage);
-  const html = await data.text();
-  const $ = cheerio.load(html);
-  const imageUrl =
-    $('meta[property="og:image"]').attr("content") ||
-    $('meta[property="og:image:url"]').attr("content");
+  const data = await fetch(homepage).catch((err) =>
+    console.log(`Page: ${homepage} is down`)
+  );
+
+  let imageUrl;
+
+  if (data) {
+    const html = await data.text();
+    const $ = cheerio.load(html);
+    imageUrl =
+      $('meta[property="og:image"]').attr("content") ||
+      $('meta[property="og:image:url"]').attr("content");
+  }
 
   if (imageUrl) {
     return imageUrl.startsWith("http") ? imageUrl : homepage + imageUrl;
