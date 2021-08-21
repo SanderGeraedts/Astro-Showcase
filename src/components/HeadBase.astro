@@ -35,3 +35,6 @@ const { title="Astro Showcase", description, permalink } = Astro.props;
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 <meta property="twitter:image" content="/assets/og.jpg" />
+<script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+<script src="https://unpkg.com/dayjs@1.8.21/plugin/relativeTime.js"></script>
+<script>dayjs.extend(window.dayjs_plugin_relativeTime)</script>

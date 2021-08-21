@@ -32,12 +32,23 @@ const image = await getOgImage(data.homepage, 'c_fit,h_353,w_672');
             )}/opengraph'`}
             alt={`Picture of ${data.owner.login}'s ${data.name}`}>
         <div class="flex items-center ">
-            <a href={data.owner.html_url}>
-                <img class="rounded-full m-2" height="64px" width="64px" src={data.owner.avatar_url} alt={`Picture of ${data.owner.login}`} loading="lazy">
+            <a href={data.owner.html_url} class="m-2">
+                <img class="rounded-full" height="64px" width="64px" src={data.owner.avatar_url} alt={`Picture of ${data.owner.login}`} loading="lazy">
             </a>
             <div class="flex flex-col">
-            <h2 class="font-bold"><a href={getUrl(data.homepage)}>{data.owner.login}/{ data.name }</a></h2>
-            <p class=" text-gray-500 italic">Created {dayjs(data.created_at).fromNow()}, last updated {dayjs(data.updated_at).fromNow()}.</p>
+                <h2 class="font-bold"><a href={getUrl(data.homepage)}>{data.owner.login}/{ data.name }</a></h2>
+                <p id="meta-data" class=" text-gray-500 italic">{ JSON.stringify({
+                    created_at: data.created_at,
+                    updated_at: data.updated_at
+                })}</p>
+                <script>
+                    const metaData = document.getElementById("meta-data");
+                    console.log(metaData.innerHTML)
+                    const data = JSON.parse(metaData.innerHTML);
+                    console.log(data)
+
+                    metaData.innerHTML = `Created ${dayjs(data.created_at).fromNow()}, last updated ${dayjs(data.updated_at).fromNow()}.`
+                </script>
             </div>
         </div>{
             data.description &&

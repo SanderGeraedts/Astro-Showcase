@@ -10,7 +10,7 @@ const { project } = Astro.props;
 const image = await getOgImage(project.homepage);
 ---
 <a href={`/${project.full_name}`}>
-    <article class="bg-white shadow overflow-hidden rounded-xl max-w-md">
+    <article class="bg-white shadow overflow-hidden rounded-xl max-w-md overflow-x-auto">
         <img 
             class="min-h-235px"
             src={ image} 
