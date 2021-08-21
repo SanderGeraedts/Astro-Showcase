@@ -37,17 +37,12 @@ const image = await getOgImage(data.homepage, 'c_fit,h_353,w_672');
             </a>
             <div class="flex flex-col">
                 <h2 class="font-bold"><a href={getUrl(data.homepage)}>{data.owner.login}/{ data.name }</a></h2>
-                <p id="meta-data" class=" text-gray-500 italic">{ JSON.stringify({
-                    created_at: data.created_at,
-                    updated_at: data.updated_at
-                })}</p>
+                <p id="meta-data" data-created-at={data.created_at} data-updated-at={data.updated_at} class=" text-gray-500 italic">Created {new Date(data.created_at).toLocaleString()}, last updated {new Date(data.updated_at).toLocaleString()}.</p>
                 <script>
                     const metaData = document.getElementById("meta-data");
-                    console.log(metaData.innerHTML)
-                    const data = JSON.parse(metaData.innerHTML);
-                    console.log(data)
+                    const {createdAt, updatedAt} = metaData.dataset
 
-                    metaData.innerHTML = `Created ${dayjs(data.created_at).fromNow()}, last updated ${dayjs(data.updated_at).fromNow()}.`
+                    metaData.innerHTML = `Created ${dayjs(createdAt).fromNow()}, last updated ${dayjs(updatedAt).fromNow()}.`
                 </script>
             </div>
         </div>{
