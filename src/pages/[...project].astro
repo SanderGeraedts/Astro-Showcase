@@ -54,7 +54,7 @@ const image = await getOgImage(data.homepage, 'c_fit,h_353,w_672');
         }
         <div class="px-2 py-1">
             <label for="homepage" class="font-bold">Page:</label>
-            <p id="homepage"><a class="underline" href="http://${data.homepage}">{data.homepage}</a></p>
+            <p id="homepage"><a class="underline" href={getUrl(data.homepage)}>{data.homepage}</a></p>
         </div>
         <div class="px-2 py-1">
             <label for="html_url" class="font-bold">Repository:</label>
